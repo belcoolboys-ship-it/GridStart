@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StartGrid — регистрация на гонки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#E4E8E9;--card:#F5F6F5;--in:#EBEEEE;--line:#C8CFD2;--tx:#171D21;--mut:#5C686E;--acc:#D8232C;--asph:#1A1F23;--ok:#12803f;
+--disp:Unbounded,"Arial Black",system-ui,sans-serif;--body:Onest,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1316;--card:#171C20;--in:#11161A;--line:#2A3238;--tx:#E9EEF0;--mut:#8C999F;--acc:#F0444C;--ok:#3ecf72}}
+:root[data-theme="dark"]{--bg:#0F1316;--card:#171C20;--in:#11161A;--line:#2A3238;--tx:#E9EEF0;--mut:#8C999F;--acc:#F0444C;--ok:#3ecf72}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 var(--body)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.top{background:var(--asph);color:#F2F4F3;margin-bottom:34px;position:relative}
+.top:after{content:"";display:block;height:7px;background:repeating-linear-gradient(90deg,#D8232C 0 24px,#F2F4F3 24px 48px)}
+header{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:14px 0}
+.logo{font-family:var(--disp);font-weight:700;font-size:16px;cursor:pointer;display:flex;align-items:center;gap:10px}
+nav{display:flex;gap:22px;flex:1}
+nav a{color:#9AA6AC;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent;font-weight:500}
+nav a:hover{color:#fff}
+nav a.on{color:#fff;border-color:var(--acc)}
+.btn{border:1px solid var(--acc);border-radius:3px;padding:10px 18px;font:600 15px var(--body);cursor:pointer;background:var(--acc);color:#fff;text-decoration:none;display:inline-block}
+.btn:hover{filter:brightness(1.1)}
+.btn.g{background:transparent;color:var(--tx);border-color:var(--tx)}
+.top .btn.g{color:#F2F4F3;border-color:#4a555c}
+.btn.s{padding:5px 11px;font-size:13px;font-weight:500}
+h1,h2,h3{font-family:var(--disp);margin:0;font-weight:700;letter-spacing:-.01em}
+h1{font-size:clamp(26px,4.6vw,44px);line-height:1.1}
+h2{font-size:19px;line-height:1.25}
+.lead{font-size:17px;color:var(--mut);max-width:46ch;margin:14px 0 0}
+.sh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:34px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:20px}
+.p0{padding:0}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:30px;align-items:start}
+.cols.gate{align-items:center;margin-top:20px}
+.tag{display:inline-block;font:700 13px var(--disp);padding:4px 9px;border-radius:2px;background:var(--acc);color:#fff}
+.tag.lmu{background:#1B5FD1}
+.pill{display:inline-block;font-size:13px;font-weight:500;padding:3px 11px;border-radius:99px;border:1px solid var(--line);background:var(--in)}
+.mut{color:var(--mut);font-size:14px}
+.bar{height:5px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc)}
+label{display:block;font-size:13.5px;font-weight:500;color:var(--mut);margin:0 0 5px}
+input,select{width:100%;height:42px;padding:0 12px;border-radius:3px;border:1px solid var(--line);background:var(--in);color:var(--tx);font:inherit}
+input:focus,select:focus{border-color:var(--tx)}
+.f{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th{text-align:left;font-size:13.5px;font-weight:500;color:var(--mut);padding:12px 14px;border-bottom:1px solid var(--tx)}
+td{padding:12px 14px;border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:0}
+.pl{display:flex;align-items:center;gap:10px;font-weight:500}
+.av{width:28px;height:28px;border-radius:50%;display:inline-grid;place-items:center;color:#fff;font-weight:600;font-size:13px;flex:none}
+.num{display:inline-block;min-width:34px;text-align:center;font:700 14px var(--disp);padding:3px 6px;border:2px solid var(--tx);border-radius:2px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:14px;color:var(--mut);font-weight:500}
+.crumb{display:inline-block;color:var(--mut);cursor:pointer;margin-bottom:16px;text-decoration:underline;text-underline-offset:3px}
+.next{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:30px;align-items:end;padding-bottom:30px;border-bottom:1px solid var(--tx)}
+.next .when{font:700 20px/1.3 var(--disp);margin-bottom:14px}
+.grp{display:flex;align-items:baseline;gap:12px;margin:34px 0 4px;padding-bottom:10px;border-bottom:1px solid var(--tx)}
+.grp h3{font-size:15px}
+.rrow{display:grid;grid-template-columns:62px minmax(0,1fr) 170px;gap:18px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.rrow:hover .rn{text-decoration:underline;text-underline-offset:3px}
+.db{text-align:center;line-height:1}
+.db b{display:block;font:700 26px var(--disp)}
+.db span{font-size:13px;color:var(--mut)}
+.rn{font-weight:600;font-size:16px}
+.rr{display:flex;align-items:center;gap:10px}
+.rr .tag{flex:none}
+.rr .fill{flex:1;min-width:0}
+.tl{list-style:none;margin:14px 0 0;padding:0 0 0 22px;border-left:2px solid var(--line)}
+.tl li{position:relative;padding:0 0 18px}
+.tl li:last-child{padding-bottom:0}
+.tl li:before{content:"";position:absolute;left:-29px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--tx)}
+.tl li.past:before{background:var(--tx)}
+.tl li:last-child:before{border-color:var(--acc);background:var(--acc)}
+.tl b{display:block;font-weight:600}
+.tl span{color:var(--mut);font-size:14px}
+.tabs{display:flex;gap:26px;margin:34px 0 0;border-bottom:1px solid var(--line)}
+.tabs a{padding:10px 0;font-weight:600;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs a.on{color:var(--tx);border-color:var(--acc)}
+.gv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 22px;padding:24px 20px 44px;background:var(--asph);border-radius:4px}
+.slot{height:60px;display:flex;align-items:center;gap:12px;padding:0 14px;border:2px solid rgba(242,244,243,.45);border-radius:2px;color:#F2F4F3;min-width:0}
+.slot:nth-child(even){margin-top:28px}
+.slot.on{background:#F2F4F3;border-color:#F2F4F3;color:#171D21}
+.slot b{font:700 18px var(--disp)}
+.slot span{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot i{font-style:normal;font-size:13px;opacity:.55}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:var(--in);border-radius:3px;padding:12px 14px}
+.stat b{display:block;font-size:16px;font-weight:600}
+.lob{display:grid;gap:12px}
+.lob b{font:700 22px var(--disp);display:block;margin:4px 0 10px;word-break:break-all}
+.menuw{position:relative}
+.menu{display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:210px;background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:4px;padding:6px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.menu.open{display:block}
+.menu a{display:block;padding:10px 12px;border-radius:3px;cursor:pointer;font-weight:500}
+.menu a:hover{background:var(--in)}
+.modal{position:fixed;inset:0;background:rgba(10,13,15,.7);display:grid;place-items:center;padding:16px;z-index:50}
+.modal .card{width:100%;max-width:400px}
+.modal .card.wide{max-width:640px;max-height:90vh;overflow:auto}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 18px;border-radius:3px;font-weight:500;z-index:60}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sp{justify-content:space-between}
+.bell{position:relative;padding:8px 12px}
+.badge{position:absolute;top:-7px;right:-7px;background:var(--acc);color:#fff;border-radius:99px;font:700 11px var(--body);min-width:19px;height:19px;display:grid;place-items:center;padding:0 5px}
+.tag.live{background:#9146FF}
+.btn.live{background:#9146FF;border-color:#9146FF}
+.livec{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:24px;border-color:#9146FF}
+.livec>div{flex:1;min-width:180px}
+.dot{width:11px;height:11px;border-radius:50%;background:#e91916;flex:none;animation:pl 1.6s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(233,25,22,.6)}70%{box-shadow:0 0 0 10px rgba(233,25,22,0)}100%{box-shadow:0 0 0 0 rgba(233,25,22,0)}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+.nrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+footer{color:var(--mut);font-size:13px;padding:50px 0 40px}
+@media (max-width:760px){
+.wrap{padding:0 14px}
+.cols,.next{grid-template-columns:minmax(0,1fr);gap:22px}
+.rrow{grid-template-columns:52px minmax(0,1fr);gap:6px 14px}
+.rrow .rr{grid-column:2}
+header{gap:10px 16px}
+nav{order:3;flex-basis:100%}
+.gv{gap:10px 12px;padding:18px 12px 38px}
+.slot{padding:0 10px;gap:8px}
+table{min-width:0}thead{display:none}
+tr{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+tbody tr:last-child{border-bottom:0}
+td{padding:0;border:0}
+td:nth-child(4),td:nth-child(5){flex-basis:100%}
+td:nth-child(5){color:var(--mut);font-size:13px}
+td:last-child:not(:first-child){margin-left:auto}
+.tabs a{flex:1;text-align:center}
+}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap"><header>
+  <div class="logo" onclick="location.hash=''"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="2" width="11" height="14" fill="none" stroke="#F2F4F3" stroke-width="2"/><rect x="15" y="9" width="11" height="14" fill="#D8232C"/></svg>StartGrid</div>
+  <nav><a data-r="races" href="#">Гонки</a><a data-r="pilots" href="#pilots">Пилоты</a></nav>
+  <div id="auth"></div>
+</header></div></div>
+<div class="wrap"><div id="app"></div><footer>© 2026 STARTGRID · Неофициальный сервис. Не связан с Kunos, Studio 397 и ACO.</footer></div>
+<div id="modal"></div>
+<div id="toast"></div>
+<script>
+const PASS="mazai23";
+const TRACKS={ACC:["Нюрбургринг","Монца","Спа","Ле-Ман","Сильверстоун"],LMU:["Ле-Ман","Спа","Монца","Фудзи"]};
+const CARS={
+ACC:{
+"GT3 — топ":["BMW M4 GT3","Ford Mustang GT3","McLaren 720S GT3 Evo","Lamborghini Huracán GT3 Evo","Mercedes-AMG GT3 Evo (2020)","Audi R8 LMS Evo II","Honda NSX GT3 Evo (2019)"],
+"GT3 — классика":["Aston Martin V8 Vantage GT3","Bentley Continental GT3 (2018)","Porsche 991 II GT3 R","Ferrari 488 GT3 Evo","Nissan GT-R Nismo GT3 (2018)","Lexus RC F GT3"],
+"GT3 — 2015–2017":["Ferrari 488 GT3 (старая версия)","Lamborghini Huracán GT3 (2015)","Porsche 991 GT3 R","Audi R8 LMS","Mercedes-AMG GT3 (2015)","BMW M6 GT3","McLaren 650S GT3","Aston Martin V12 Vantage GT3","Nissan GT-R Nismo GT3 (2015)","Bentley Continental GT3 (2015)","Honda NSX GT3 (2017)","Reiter Engineering Gallardo R-EX","Emil Frey Jaguar G3"],
+"Монокубки":["Porsche 991 II GT3 Cup","Lamborghini Huracán Super Trofeo","BMW M2 CS Racing (TCX)"]},
+LMU:{
+"Hypercar":["Toyota GR010 Hybrid","Porsche 963","BMW M Hybrid V8","Cadillac V-Series.R","Ferrari 499P","Peugeot 9X8 (2023)","Glickenhaus SCG 007","Vanwall Vandervell 680","Isotta Fraschini Tipo 6-C","Alpine A424","Aston Martin Valkyrie AMR LMH"],
+"LMP2":["ORECA 07 Gibson","ORECA 07 Gibson (ELMS)"],
+"LMP3":["Adess AD25"],
+"LMGTE":["Porsche 911 RSR-19","Ferrari 488 GTE Evo","Chevrolet Corvette C8.R","Aston Martin Vantage GTE"],
+"LMGT3":["McLaren 720S GT3 Evo","Ford Mustang GT3","Mercedes-AMG GT3"]}};
+const mem={races:{},entries:{},admins:{},players:{}};
+let db=null,admin=null,uid=null,cuid=null,ready=false,gtab="reg";
+try{admin=sessionStorage.getItem("sg_admin")}catch(e){}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(t){const e=$("#toast");e.innerHTML='<div class="toast">'+esc(t)+'</div>';setTimeout(()=>e.innerHTML="",2600)}
+function loadLocal(){try{const d=JSON.parse(localStorage.getItem("sg_data")||"null");if(d){mem.races=d.races||{};mem.entries=d.entries||{};mem.admins=d.admins||{};mem.players=d.players||{}}}catch(e){}}
+function saveLocal(){try{localStorage.setItem("sg_data",JSON.stringify(mem))}catch(e){}}
+function put(c,id,data){mem[c][id]=data;saveLocal();render();if(db)db.collection(c).doc(id).set(data).catch(()=>toast("Не удалось сохранить в общую базу"))}
+function del(c,id){delete mem[c][id];saveLocal();render();if(db)db.collection(c).doc(id).delete().catch(()=>{})}
+async function init(){
+  try{uid=localStorage.getItem("sg_pid")||null}catch(e){}
+  try{if(!localStorage.getItem("sg_seen"))localStorage.setItem("sg_seen",String(Date.now()))}catch(e){}
+  loadLocal();render();
+  try{
+    if(window.claude&&claude.use){
+      const u=await claude.use("user");
+      if(u&&u.id)cuid=await u.id();
+      db=await claude.use("db");
+    }
+  }catch(e){db=null}
+  if(!cuid)cuid=localUid();
+  if(db){["races","entries","players"].forEach(c=>sub(c,0));setInterval(poll,20000)}
+  else ready=true;
+  render();
+}
+window.addEventListener("hashchange",render);
+document.addEventListener("focusout",()=>setTimeout(()=>{if(pending)render()},50));
+let pending=false;
+function typing(){const a=document.activeElement;return a&&a.closest&&a.closest("#app")&&/INPUT|SELECT/.test(a.tagName)}
+function render(){
+  if(typing()){pending=true;return}
+  pending=false;
+  if(!ready){$("#auth").innerHTML="";$("#app").innerHTML='<div class="card mut">Загрузка…</div>';return}
+  adopt();
+  const p=me();
+  $("#auth").innerHTML=!p?"":'<div class="row" style="flex-wrap:nowrap;gap:8px">'+bellBtn()+'<div class="menuw"><button class="btn g" onclick="toggleMenu(event)"><span class="pl" style="display:inline-flex">'+av(p.nick)+esc(p.nick)+' ▾</span></button><div class="menu" id="menu">'+(admin?'<a onclick="createModal()">＋ Создать гонку</a>':'')+'<a onclick="logout()">Выйти</a></div></div></div>';
+  if(!p){gate();return}
+  const h=location.hash.slice(1);
+  document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.r===(h==="pilots"?"pilots":"races")));
+  if(h==="pilots")pilots();else if(h.startsWith("race-")&&mem.races[h.slice(5)])raceView(h.slice(5));else home();
+}
+let baseRaces=false;
+function applySnap(c,snap){
+  const old=mem[c],nw={};snap.docs.forEach(d=>nw[d.id]=d.data());
+  const first=c==="players"&&!ready;
+  if(JSON.stringify(old)===JSON.stringify(nw)&&!first)return;
+  mem[c]=nw;saveLocal();
+  if(c==="races"){if(baseRaces)detectNew(old);else baseRaces=true}
+  if(c==="players")ready=true;
+  render();
+}
+function sub(c,n){try{db.collection(c).onSnapshot(sn=>applySnap(c,sn),()=>{if(c==="players"&&!ready){ready=true;render()}setTimeout(()=>sub(c,n+1),Math.min(30000,2000*(n+1)))})}catch(e){}}
+async function poll(){if(!db)return;for(const c of["races","entries","players"]){try{applySnap(c,await db.collection(c).get())}catch(e){}}}
+function detectNew(old){
+  Object.entries(mem.races).forEach(([id,r])=>{
+    if(old&&!old[id]&&r.owner!==admin){
+      toast("Новая гонка: "+r.name);
+      if(window.Notification&&Notification.permission==="granted"){try{new Notification("Новая гонка в StartGrid",{body:r.name+", "+r.track})}catch(e){}}
+    }
+  });
+}
+function seenTs(){try{return +localStorage.getItem("sg_seen")||0}catch(e){return 0}}
+function unreadRaces(){const t=seenTs();return Object.entries(mem.races).filter(([i,r])=>(r.created||0)>t&&r.owner!==admin).sort((a,b)=>(b[1].created||0)-(a[1].created||0))}
+function bellBtn(){const n=unreadRaces().length;return '<button class="btn g bell" onclick="bellModal()" aria-label="Уведомления">🔔'+(n?'<span class="badge">'+n+'</span>':"")+'</button>'}
+function bellModal(){
+  const u=unreadRaces();
+  let perm;
+  if(typeof Notification==="undefined")perm='<div class="mut">Этот браузер не поддерживает системные уведомления. Новые гонки показываются здесь и во всплывающем сообщении, пока страница открыта.</div>';
+  else if(Notification.permission==="granted")perm='<div class="mut">Системные уведомления включены: пока страница открыта, вы получите сообщение о новой гонке.</div>';
+  else if(Notification.permission==="denied")perm='<div class="mut">Системные уведомления заблокированы в настройках браузера. Новые гонки всё равно появляются здесь.</div>';
+  else perm='<button class="btn g" onclick="enableNotif()">Включить системные уведомления</button>';
+  $("#modal").innerHTML='<div class="modal" onclick="if(event.target===this)closeM()"><div class="card"><div class="row sp"><b style="font-size:17px">Уведомления</b><button class="btn g s" onclick="closeM()">✕</button></div><div style="margin-top:6px">'+(u.length?u.map(([id,r])=>'<div class="nrow"><div><b>'+esc(r.name)+'</b><div class="mut">'+(FLAG[r.track]||"")+' '+esc(r.track)+(r.date?', '+fmt(r.date)+' МСК':"")+'</div></div><button class="btn g s" onclick="closeM();location.hash=\'race-'+id+'\'">Открыть</button></div>').join(""):'<p class="mut">Новых гонок нет.</p>')+'</div><div style="margin-top:14px">'+perm+'</div></div></div>';
+  try{localStorage.setItem("sg_seen",String(Date.now()))}catch(e){}
+  render();
+}
+function enableNotif(){Notification.requestPermission().then(()=>bellModal(),()=>bellModal())}
+function twitchUrl(v){v=String(v||"").trim();if(!v)return"";const m=v.match(/twitch\.tv\/([A-Za-z0-9_]+)/i);if(m)return"https://twitch.tv/"+m[1].toLowerCase();if(/^[A-Za-z0-9_]{3,25}$/.test(v))return"https://twitch.tv/"+v.toLowerCase();return""}
+function isLive(r){const st=ts(r.date);if(isNaN(st))return false;const n=Date.now();return n>=st&&n<=st+((+r.dur||60)+20)*60000}
+function liveBanner(r){if(!r.twitch||!isLive(r))return"";return '<div class="card livec"><span class="dot"></span><div><b>Гонка идёт</b><div class="mut">Трансляция на Twitch</div></div><a class="btn live" href="'+esc(r.twitch)+'" target="_blank" rel="noopener">Смотреть на Twitch ↗</a></div>'}
+function localUid(){let u=null;try{u=localStorage.getItem("sg_uid");if(!u){u="u"+Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem("sg_uid",u)}}catch(e){}return u||"guest"}
+function me(){return uid?mem.players[uid]:null}
+function gateTab(t){gtab=t;render()}
+function gate(){
+  const reg=gtab==="reg";
+  $("#app").innerHTML='<div class="cols gate"><div><h1>Займи место на решётке</h1><p class="lead">Зарегистрируйся, чтобы смотреть гонки и записываться на них. Если аккаунт уже есть, авторизуйся.</p></div><div class="card"><div class="tabs" style="margin:0 0 14px"><a class="'+(reg?"on":"")+'" onclick="gateTab(\'reg\')">Регистрация</a><a class="'+(reg?"":"on")+'" onclick="gateTab(\'in\')">Авторизоваться</a></div><div style="display:grid;gap:12px">'+
+  (reg?'<div><label>Ник</label><input id="pn" maxlength="24" placeholder="Твой гоночный ник"></div><div><label>Пароль</label><input id="pw" type="password" placeholder="Придумай пароль"></div><div><label>Steam</label><button class="btn g" type="button" onclick="openSteam()" style="width:100%">Перейти в Steam ↗</button><div class="mut" style="margin-top:6px">Откроется Steam. Зайди в аккаунт, открой свой профиль, скопируй ссылку из адресной строки и вставь ниже.</div></div><div><label>Ссылка на профиль Steam</label><input id="ps" placeholder="https://steamcommunity.com/id/…"></div><button class="btn" onclick="regPlayer()">Зарегистрироваться</button>'
+  :'<div><label>Ник</label><input id="ln" maxlength="24" placeholder="Твой ник"></div><div><label>Пароль</label><input id="lp" type="password" placeholder="Пароль"></div><button class="btn" onclick="login()">Войти</button>')+'</div></div></div>';
+}
+function openSteam(){window.open("https://steamcommunity.com/my/profile","_blank","noopener")}
+function steamNorm(v){v=v.trim();const m=v.match(/steamcommunity\.com\/(id|profiles)\/([A-Za-z0-9_\-]+)/i);if(m)return"https://steamcommunity.com/"+m[1].toLowerCase()+"/"+m[2];if(/^7656119\d{10}$/.test(v))return"https://steamcommunity.com/profiles/"+v;return""}
+async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("sg:"+t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function findNick(n){const k=n.toLowerCase();return Object.entries(mem.players).find(([i,p])=>(p.nick||"").toLowerCase()===k)}
+function setUid(id){uid=id;try{localStorage.setItem("sg_pid",id);localStorage.removeItem("sg_out")}catch(e){}render()}
+function adopt(){let out=null;try{out=localStorage.getItem("sg_out")}catch(e){}if(!uid&&!out&&cuid&&mem.players[cuid]){uid=cuid;try{localStorage.setItem("sg_pid",cuid)}catch(e){}}}
+async function regPlayer(){
+  const n=$("#pn").value.trim(),pw=$("#pw").value,st=steamNorm($("#ps").value);
+  if(n.length<2)return toast("Ник — минимум 2 символа");
+  if(pw.length<4)return toast("Пароль — минимум 4 символа");
+  if(!st)return toast("Вставьте ссылку на профиль Steam");
+  if(findNick(n))return toast("Этот ник уже занят");
+  const id="p"+Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+  const h=await sha(n.toLowerCase()+pw);
+  put("players",id,{nick:n,steam:st,pw:h,created:Date.now()});
+  setUid(id);toast("Регистрация завершена")
+}
+async function login(){
+  const n=$("#ln").value.trim(),pw=$("#lp").value;
+  if(!n)return toast("Введите ник");
+  if(pw===PASS){
+    admin=n;try{sessionStorage.setItem("sg_admin",n)}catch(e){}
+    const id="a_"+[...n.toLowerCase()].map(c=>c.charCodeAt(0).toString(36)).join("-");
+    if(!mem.players[id])put("players",id,{nick:n,steam:"",created:Date.now()});
+    setUid(id);return toast("Вы вошли")
+  }
+  const f=findNick(n);
+  if(!f||!f[1].pw||f[1].pw!==await sha(n.toLowerCase()+pw))return toast("Неверный ник или пароль");
+  admin=null;try{sessionStorage.removeItem("sg_admin")}catch(e){}
+  setUid(f[0]);
+}
+function logout(){admin=null;uid=null;try{sessionStorage.removeItem("sg_admin");localStorage.removeItem("sg_pid");localStorage.setItem("sg_out","1")}catch(e){}gtab="in";render()}
+function toggleMenu(e){e.stopPropagation();const m=$("#menu");if(m)m.classList.toggle("open")}
+function closeM(){$("#modal").innerHTML=""}
+function createModal(){$("#modal").innerHTML=adminPanel();fillTracks()}
+function carOpts(r){const G=CARS[r.game],ks=r.cls&&G[r.cls]?[r.cls]:Object.keys(G);return '<option value="">Выберите машину</option>'+ks.map(k=>'<optgroup label="'+esc(k)+'">'+G[k].map(c=>'<option>'+esc(c)+'</option>').join("")+'</optgroup>').join("")}
+function cp(v){(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast("Скопировано"),()=>toast(v))}
+function saveLobby(id){const r=mem.races[id],tw=$("#ltw").value.trim(),t=twitchUrl(tw);if(tw&&!t)return toast("Некорректная ссылка на Twitch");put("races",id,Object.assign({},r,{lobby:$("#lc").value.trim(),spass:$("#lpw").value.trim(),twitch:t}));toast("Сохранено")}
+function lobbyCard(id,r,mine,own){
+  if(!mine&&!own)return"";
+  const st=Date.parse(String(r.date||"").replace(" ","T")+":00+03:00"),open=isNaN(st)||Date.now()>=st-3600000;
+  let b;
+  if(own)b='<div class="f"><div><label>Код лобби</label><input id="lc" value="'+esc(r.lobby||"")+'"></div><div><label>Пароль сервера</label><input id="lpw" value="'+esc(r.spass||"")+'"></div><div><label>Twitch-стрим</label><input id="ltw" value="'+esc(r.twitch||"")+'" placeholder="twitch.tv/канал"></div></div><div style="margin-top:12px"><button class="btn" onclick="saveLobby(\''+id+'\')">Сохранить</button></div><div class="mut" style="margin-top:8px">Участники увидят эти данные за час до старта.</div>';
+  else if(!r.lobby&&!r.spass)b='<span class="mut">Организатор ещё не добавил данные лобби.</span>';
+  else if(!open)b='<span class="mut">Код лобби и пароль сервера появятся за 1 час до старта — в '+fmt(new Date(st-3600000+10800000).toISOString())+' МСК.</span>';
+  else b='<div class="lob"><div class="stat"><span class="mut">Код лобби</span><b>'+esc(r.lobby||"—")+'</b><button class="btn g s" data-v="'+esc(r.lobby||"")+'" onclick="cp(this.dataset.v)">Копировать</button></div><div class="stat"><span class="mut">Пароль сервера</span><b>'+esc(r.spass||"—")+'</b><button class="btn g s" data-v="'+esc(r.spass||"")+'" onclick="cp(this.dataset.v)">Копировать</button></div></div>';
+  return '<div class="sh" style="margin-top:0"><h2>Лобби</h2></div><div class="card">'+b+'</div>'
+}
+function cnt(id){return Object.values(mem.entries).filter(e=>e.race===id).length}
+const MON=["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
+function ts(d){return Date.parse(String(d||"").replace(" ","T")+":00+03:00")}
+function when(r){const t=ts(r.date);if(isNaN(t))return"";const d=t-Date.now();if(d<=0)return"Старт уже был";const D=Math.floor(d/864e5),H=Math.floor(d%864e5/36e5),M=Math.floor(d%36e5/6e4);return"Старт через "+(D?D+" д "+H+" ч":H?H+" ч "+M+" мин":M+" мин")}
+function dateBlk(r){const m=String(r.date||"").match(/\d{4}-(\d\d)-(\d\d)/);return m?'<div class="db"><b>'+m[2]+'</b><span>'+MON[+m[1]-1]+'</span></div>':'<div class="db"><b>—</b></div>'}
+function home(){
+  const rs=Object.entries(mem.races).sort((a,b)=>String(a[1].date||"9").localeCompare(String(b[1].date||"9")));
+  const now=Date.now(),up=rs.find(([i,r])=>ts(r.date)>now)||rs[0];
+  let h='';
+  if(up){const [id,r]=up,c=cnt(id);h+='<section class="next"><div><span class="tag '+(r.game==="LMU"?"lmu":"")+'">'+esc(r.game)+'</span><h1 style="margin-top:16px">'+esc(r.name)+'</h1><div class="meta"><span>'+(FLAG[r.track]||"")+' '+esc(r.track)+'</span>'+(r.date?'<span>'+fmt(r.date)+' МСК</span>':"")+(r.cls?'<span>'+esc(r.cls)+'</span>':"")+'</div><div style="margin-top:22px"><button class="btn" onclick="location.hash=\'race-'+id+'\'">Открыть гонку</button>'+(isLive(r)&&r.twitch?' <a class="btn live" href="'+esc(r.twitch)+'" target="_blank" rel="noopener">Смотреть на Twitch</a>':"")+'</div></div><div>'+(when(r)?'<div class="when">'+when(r)+'</div>':"")+'<div class="bar"><i style="width:'+Math.min(100,c/r.slots*100)+'%"></i></div><p class="mut" style="margin:8px 0 0">Занято '+c+' из '+r.slots+' мест</p></div></section>'}
+  else h+='<section class="next"><div><h1>Здесь появятся гонки</h1><p class="lead">Когда будет создана первая гонка, она окажется на этой странице.</p></div></section>';
+  const gs={};rs.forEach(([id,r])=>{const k=r.cls||"Без класса";(gs[k]=gs[k]||[]).push([id,r])});
+  Object.keys(gs).forEach(k=>{h+='<div class="grp"><h3>'+esc(k)+'</h3><span class="mut">'+gs[k].length+'</span></div>'+gs[k].map(([id,r])=>{const c=cnt(id);return '<div class="rrow" onclick="location.hash=\'race-'+id+'\'">'+dateBlk(r)+'<div><div class="rn">'+esc(r.name)+'</div><div class="mut">'+(FLAG[r.track]||"")+' '+esc(r.track)+(r.date?', '+fmt(r.date).slice(11)+' МСК':"")+'</div></div><div class="rr"><span class="tag '+(r.game==="LMU"?"lmu":"")+'">'+esc(r.game)+'</span>'+(isLive(r)&&r.twitch?'<span class="tag live">LIVE</span>':"")+'<div class="fill"><div class="bar"><i style="width:'+Math.min(100,c/r.slots*100)+'%"></i></div><div class="mut">'+c+' из '+r.slots+'</div></div></div></div>'}).join("")});
+  $("#app").innerHTML=h;
+}
+function adminPanel(){
+  return '<div class="modal" onclick="if(event.target===this)closeM()"><div class="card wide"><div class="row sp"><b style="font-size:17px">Создать гонку</b><button class="btn g s" onclick="closeM()">✕</button></div><div class="f" style="margin-top:10px"><div><label>Название</label><input id="rn" placeholder="Например, Sunday Sprint"></div><div><label>Игра</label><select id="rg" onchange="fillTracks()"><option>ACC</option><option>LMU</option></select></div><div><label>Класс машин</label><select id="rc"></select></div><div><label>Трасса</label><select id="rt"></select></div><div><label>Кол-во гонщиков</label><input id="rs" type="number" min="2" max="60" value="20"></div><div><label>Практика</label><input id="rp" type="datetime-local"></div><div><label>Брифинг</label><input id="rb" type="datetime-local"></div><div><label>Квалификация</label><input id="rq" type="datetime-local"></div><div><label>Гонка</label><input id="rd" type="datetime-local"></div><div><label>Длительность, мин</label><input id="rdur" type="number" min="5" value="60"></div><div><label>Ссылка на racecontrol.gg</label><input id="rl" placeholder="https://racecontrol.gg/…"></div><div><label>Twitch-стрим (ссылка или канал)</label><input id="rtw" placeholder="twitch.tv/канал"></div><div><label>Код лобби</label><input id="rlb" placeholder="Можно добавить позже"></div><div><label>Пароль сервера</label><input id="rsp" placeholder="Можно добавить позже"></div></div><div style="margin-top:12px"><button class="btn" onclick="mkRace()">Создать гонку</button></div></div></div>';
+}
+function fillTracks(){const g=$("#rg"),t=$("#rt"),c=$("#rc");if(!g||!t||!c)return;const ct=t.value,cc=c.value;t.innerHTML=TRACKS[g.value].map(x=>"<option>"+x+"</option>").join("");c.innerHTML=Object.keys(CARS[g.value]).map(x=>"<option>"+esc(x)+"</option>").join("");if(TRACKS[g.value].includes(ct))t.value=ct;if(CARS[g.value][cc])c.value=cc}
+function mkRace(){
+  const name=$("#rn").value.trim(),slots=parseInt($("#rs").value,10),link=$("#rl").value.trim();
+  if(!name)return toast("Введите название");
+  if(!(slots>=2))return toast("Укажите количество гонщиков");
+  if(link&&!/^https?:\/\//i.test(link))return toast("Ссылка должна начинаться с https://");
+  if($("#rtw").value.trim()&&!twitchUrl($("#rtw").value))return toast("Некорректная ссылка на Twitch");
+  const id=Date.now().toString(36);
+  put("races",id,{name,game:$("#rg").value,track:$("#rt").value,cls:$("#rc").value,lobby:$("#rlb").value.trim(),spass:$("#rsp").value.trim(),twitch:twitchUrl($("#rtw").value),slots,date:$("#rd").value||"",prac:$("#rp").value||"",brief:$("#rb").value||"",quali:$("#rq").value||"",dur:$("#rdur").value||"",link,owner:admin,created:Date.now()});
+  closeM();rtab="res";location.hash="race-"+id;toast("Гонка создана")
+}
+let rtab="res";
+function setTab(t){rtab=t;render()}
+const FLAG={"Нюрбургринг":"🇩🇪","Монца":"🇮🇹","Спа":"🇧🇪","Ле-Ман":"🇫🇷","Сильверстоун":"🇬🇧","Фудзи":"🇯🇵"};
+function fmt(d){if(!d)return"";const m=String(d).match(/(\d{4})-(\d\d)-(\d\d)[T ](\d\d:\d\d)/);return m?m[3]+"."+m[2]+"."+m[1]+" "+m[4]:esc(d)}
+function av(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;return '<span class="av" style="background:hsl('+h+',55%,45%)">'+esc((n[0]||"?").toUpperCase())+'</span>'}
+function pilots(){
+  const ps=Object.entries(mem.players).sort((a,b)=>(a[1].created||0)-(b[1].created||0));
+  const n=u=>Object.values(mem.entries).filter(e=>e.uid===u).length;
+  $("#app").innerHTML='<div class="sh"><h2>Пилоты</h2><span class="mut">'+ps.length+'</span></div><div class="card tw p0"><table><thead><tr><th>#</th><th>Пилот</th><th>Steam</th><th>Гонок</th></tr></thead><tbody>'+(ps.length?ps.map(([u,p],i)=>'<tr><td>'+(i+1)+'</td><td><div class="pl">'+av(p.nick)+esc(p.nick)+'</div></td><td class="mut">'+esc(p.steam)+'</td><td>'+n(u)+'</td></tr>').join(""):'<tr><td colspan="4" class="mut">Пока нет пилотов</td></tr>')+'</tbody></table></div>';
+}
+function gridViz(r,es){
+  const n=Math.min(r.slots,60);let o="";
+  for(let i=0;i<n;i++){const e=es[i]&&es[i][1];o+=e?'<div class="slot on"><b>'+esc(e.num)+'</b><span>'+esc(e.name)+'</span></div>':'<div class="slot"><i>'+(i+1)+'</i></div>'}
+  return '<div class="gv">'+o+'</div>'
+}
+function raceView(id){
+  const r=mem.races[id],es=Object.entries(mem.entries).filter(([k,e])=>e.race===id).sort((a,b)=>(a[1].t||0)-(b[1].t||0)),full=es.length>=r.slots,mine=es.some(([k,e])=>e.uid===uid),own=admin&&r.owner===admin;
+  const gname=r.game==="ACC"?"Assetto Corsa Competizione":"Le Mans Ultimate";
+  const steps=[["Практика",r.prac],["Брифинг",r.brief],["Квалификация",r.quali],["Гонка",r.date]].filter(x=>x[1]);
+  const tl=steps.length?'<ol class="tl">'+steps.map(x=>{const t=ts(x[1]);return '<li class="'+(t<Date.now()?"past":"")+'"><b>'+x[0]+'</b><span>'+fmt(x[1])+' МСК</span></li>'}).join("")+'</ol>':'<p class="mut" style="margin:10px 0 0">Расписание появится, когда его добавит организатор.</p>';
+  let h='<a class="crumb" onclick="location.hash=\'\'">Все гонки</a><div class="cols"><div><div class="row"><span class="tag '+(r.game==="LMU"?"lmu":"")+'">'+esc(r.game)+'</span><span class="pill">'+esc(r.cls||"Все классы")+'</span></div><h1 style="margin-top:16px">'+esc(r.name)+'</h1><div class="meta"><span>'+(FLAG[r.track]||"")+' '+esc(r.track)+'</span>'+(r.dur?'<span>'+esc(r.dur)+' мин</span>':"")+'<span>'+gname+'</span></div><div class="row" style="margin-top:22px">'+(r.link?'<a class="btn" href="'+esc(r.link)+'" target="_blank" rel="noopener">Открыть на racecontrol.gg</a>':"")+'<button class="btn g" onclick="copyLink()">Скопировать ссылку</button>'+(own?'<button class="btn g" onclick="delRace(\''+id+'\')">Удалить гонку</button>':"")+'</div></div><div class="card"><b>Расписание</b>'+tl+'</div></div>';
+  h+=liveBanner(r);
+  h+='<div class="tabs"><a class="'+(rtab==="res"?"on":"")+'" onclick="setTab(\'res\')">Участники</a><a class="'+(rtab==="info"?"on":"")+'" onclick="setTab(\'info\')">Информация</a></div>';
+  if(rtab==="info"){
+    h+='<div class="sh"><h2>Информация о гонке</h2></div><div class="card"><div class="stats"><div class="stat"><span class="mut">Игра</span><b>'+gname+'</b></div><div class="stat"><span class="mut">Трасса</span><b>'+esc(r.track)+'</b></div><div class="stat"><span class="mut">Класс</span><b>'+esc(r.cls||"Все")+'</b></div><div class="stat"><span class="mut">Длительность</span><b>'+(r.dur?esc(r.dur)+" мин":"—")+'</b></div><div class="stat"><span class="mut">Гонщики</span><b>'+es.length+' из '+r.slots+'</b></div><div class="stat"><span class="mut">Свободно мест</span><b>'+Math.max(0,r.slots-es.length)+'</b></div></div></div>';
+  }else{
+    h+='<div class="cols"><div><div class="sh"><h2>Стартовая решётка</h2><span class="mut">Занято '+es.length+' из '+r.slots+'</span></div>'+gridViz(r,es)+'</div><div>'+lobbyCard(id,r,mine,own)+'<div class="sh"><h2>Запись на гонку</h2></div><div class="card">'+(mine?'<span class="mut">Вы уже записаны на эту гонку.</span>':full?'<span class="mut">Все места заняты.</span>':'<div class="f"><div><label>Номер машины</label><input id="en" type="number" min="1" max="999"></div><div><label>Гонщик</label><input value="'+esc(me().nick)+'" disabled></div><div><label>Машина</label><select id="ec">'+carOpts(r)+'</select></div><div><label>Ливрея</label><input id="el" placeholder="Название или описание"></div></div><div style="margin-top:16px"><button class="btn" onclick="reg(\''+id+'\')">Записаться</button></div>')+'</div></div></div>';
+    h+='<div class="sh"><h2>Список заявок</h2></div><div class="card tw p0"><table><thead><tr><th>Место</th><th>Номер</th><th>Пилот</th><th>Машина</th><th>Ливрея</th>'+(own||mine?'<th></th>':'')+'</tr></thead><tbody>'+(es.length?es.map(([k,e],i)=>'<tr><td>'+(i+1)+'</td><td><span class="num">'+esc(e.num)+'</span></td><td><div class="pl">'+av(e.name)+esc(e.name)+'</div></td><td>'+esc(e.car)+'</td><td>'+esc(e.livery||"—")+'</td>'+(own||e.uid===uid?'<td><button class="btn g s" onclick="del(\'entries\',\''+k+'\')">Убрать</button></td>':(own||mine?'<td></td>':""))+'</tr>').join(""):'<tr><td colspan="6" class="mut">Пока никто не записался. Станьте первым.</td></tr>')+'</tbody></table></div>';
+  }
+  $("#app").innerHTML=h;
+}
+function reg(rid){
+  const r=mem.races[rid],p=me(),num=parseInt($("#en").value,10),car=$("#ec").value,livery=$("#el").value.trim();
+  if(!(num>=1))return toast("Укажите номер машины");
+  if(!car)return toast("Выберите машину");
+  if(cnt(rid)>=r.slots)return toast("Мест нет");
+  if(Object.values(mem.entries).some(e=>e.race===rid&&e.uid===uid))return toast("Вы уже зарегистрированы");
+  const k=rid+"-"+num;
+  if(mem.entries[k])return toast("Номер "+num+" уже занят");
+  put("entries",k,{race:rid,uid,num,name:p.nick,car,livery,t:Date.now()});toast("Вы в списке!")
+}
+function delRace(id){if(!confirm("Удалить гонку и всех участников?"))return;Object.entries(mem.entries).forEach(([k,e])=>{if(e.race===id)del("entries",k)});del("races",id);location.hash=""}
+function copyLink(){const u=location.href;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast("Ссылка скопирована"),()=>toast(u))}
+setInterval(()=>{if(ready)render()},30000);
+document.addEventListener("click",()=>{const m=$("#menu");if(m)m.classList.remove("open")});
+init();
+</script>
+</body>
+</html>
