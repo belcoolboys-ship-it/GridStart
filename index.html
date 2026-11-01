@@ -237,13 +237,13 @@ function getPend(){try{return JSON.parse(sessionStorage.getItem("sg_steam_pendin
 function setPend(p){try{sessionStorage.setItem("sg_steam_pending",JSON.stringify(p))}catch(e){}}
 function clearPend(){try{sessionStorage.removeItem("sg_steam_pending")}catch(e){}render()}
 function steamLogin(){
-  const base=location.href.split("#")[0].split("?")[0];
+  const base=location.origin+location.pathname;
   const ret=base+"?sgsteam=1";
   const p=new URLSearchParams({
     "openid.ns":"http://specs.openid.net/auth/2.0",
     "openid.mode":"checkid_setup",
     "openid.return_to":ret,
-    "openid.realm":location.origin!=="null"?location.origin:base,
+    "openid.realm":base,
     "openid.identity":"http://specs.openid.net/auth/2.0/identifier_select",
     "openid.claimed_id":"http://specs.openid.net/auth/2.0/identifier_select"
   });
@@ -252,12 +252,12 @@ function steamLogin(){
 function steamCallback(){
   try{
     const qs=new URLSearchParams(location.search);
-    const claimed=qs.get("openid.claimed_id")||qs.get("openid.identity");
-    if(!qs.get("sgsteam")&&!claimed)return;
-    history.replaceState(null,"",location.pathname+location.hash);
+    if(!qs.get("sgsteam"))return;
+    history.replaceState(null,"",location.href.split("?")[0]+location.hash);
     if(qs.get("openid.mode")==="cancel"){toast("Вход через Steam отменён");return}
-    const m=claimed&&String(claimed).match(/steamcommunity\.com\/(profiles|id)\/([A-Za-z0-9_]+)/i);
-    if(!m){toast("Steam не подтвердил вход");return}
+    const claimed=qs.get("openid.claimed_id")||qs.get("openid.identity")||"";
+    const m=String(claimed).match(/steamcommunity\.com\/(profiles|id)\/([A-Za-z0-9_\-]+)/i);
+    if(!m){toast("Steam не подтвердил вход. Попробуйте ещё раз или вставьте ссылку на профиль вручную.");return}
     const url="https://steamcommunity.com/"+m[1].toLowerCase()+"/"+m[2];
     setPend({url:url,nick:"",avatar:""});
     toast("Steam подтверждён, загружаю профиль…");
@@ -382,6 +382,13 @@ function attachSteam(id){
   put("players",id,Object.assign({},p,{steam:pend.url,ava:pend.avatar||p.ava||"",ms:pend.memberSince||p.ms||""}));
   toast("Steam привязан");
 }
+function saveSteam(id){
+  const p=mem.players[id];if(!p)return;
+  const v=steamNorm($("#psteam").value);
+  if(!v)return toast("Вставьте корректную ссылку на профиль Steam");
+  if(Object.entries(mem.players).some(([i,q])=>i!==id&&q.steam===v))return toast("Этот Steam уже привязан к другому аккаунту");
+  put("players",id,Object.assign({},p,{steam:v}));closeM();toast("Steam сохранён");
+}
 function unlinkSteam(id){
   const p=mem.players[id];if(!p)return;
   put("players",id,Object.assign({},p,{steam:"",ms:""}));closeM();toast("Steam отвязан");
@@ -417,7 +424,7 @@ function profileModal(id){
     h+='<div class="sh"><h2>Рейтинг LMU</h2></div><div class="mut">LMU не отдаёт рейтинг через открытый API — внесите свои значения из игры (профиль → Competition).</div><div class="f" style="margin-top:10px"><div><label>Безопасность (SR)</label><select id="psr">'+["","S","A","B","C","D","E","F"].map(function(x){return '<option value="'+x+'"'+(p.sr===x?" selected":"")+'>'+(x||"—")+'</option>'}).join("")+'</select></div><div><label>Рейтинг (RC, очки)</label><input id="prc" type="number" min="0" max="99999" value="'+esc(p.rc||"")+'" placeholder="например, 6543"></div></div><div class="row" style="margin-top:12px"><button class="btn" onclick="saveRating(\''+id+'\')">Сохранить рейтинг</button></div>';
   }
   if(mine){
-    h+='<div class="sh"><h2>Steam</h2></div><div class="mut" style="margin-bottom:8px">'+(p.steam?'Привязан: <span style="word-break:break-all">'+esc(p.steam)+'</span> — используется только для достижений.':'Steam не привязан. Он нужен только для достижений вроде «Ветеран Steam» — на гонки и рейтинг не влияет.')+'</div><div class="row"><button class="btn g" onclick="steamLogin()">Привязать через Steam ↗</button>'+(p.steam?'<button class="btn g" onclick="unlinkSteam(\''+id+'\')">Отвязать</button>':"")+'</div>';
+    h+='<div class="sh"><h2>Steam</h2></div><div class="mut" style="margin-bottom:8px">'+(p.steam?'Привязан: <span style="word-break:break-all">'+esc(p.steam)+'</span> — используется только для достижений.':'Steam не привязан. Он нужен только для достижений вроде «Ветеран Steam» — на гонки и рейтинг не влияет.')+'</div><div class="row"><button class="btn g" onclick="steamLogin()">Привязать через Steam ↗</button>'+(p.steam?'<button class="btn g" onclick="unlinkSteam(\''+id+'\')">Отвязать</button>':"")+'</div><div style="margin-top:8px"><label>Или вставьте ссылку вручную</label><input id="psteam" placeholder="https://steamcommunity.com/id/…" value="'+esc(p.steam||"")+'"></div><div class="row" style="margin-top:8px"><button class="btn g" onclick="saveSteam(\''+id+'\')">Сохранить ссылку</button></div>';
   }
   h+='<div class="sh"><h2>Достижения</h2><span class="mut">'+got+' / '+ach.length+'</span></div><div class="achv">'+ach.map(a=>'<div class="ach'+(a.got?"":" lock")+'"><span class="ic">'+a.icon+'</span><b>'+esc(a.name)+'</b><span>'+esc(a.desc)+'</span></div>').join("")+'</div>';
   if(admin&&!mine){
@@ -436,7 +443,7 @@ function grantAch(id){
 function gateTab(t){gtab=t;try{sessionStorage.setItem("sg_gtab",t)}catch(e){}render()}
 function gate(){
   const reg=gtab==="reg";
-  $("#app").innerHTML='<div class="cols gate"><div><h1>Займи место на решётке</h1><p class="lead">Зарегистрируйся, чтобы записываться на гонки LMU и ACC, отслеживать рейтинг и собирать достижения. Регистрация идёт через Steam — это нужно, чтобы переносить сюда достижения из игры.</p></div><div class="card"><div class="tabs" style="margin:0 0 14px"><a class="'+(reg?"on":"")+'" onclick="gateTab(\'reg\')">Регистрация</a><a class="'+(reg?"":"on")+'" onclick="gateTab(\'in\')">Авторизоваться</a></div><div style="display:grid;gap:12px">'+
+  $("#app").innerHTML='<div class="cols gate"><div><h1>Займи место на решётке</h1><p class="lead">Зарегистрируйся, чтобы записываться на гонки LMU и ACC, отслеживать рейтинг и собирать достижения. Steam — по желанию: он нужен только чтобы переносить сюда достижения из игры.</p></div><div class="card"><div class="tabs" style="margin:0 0 14px"><a class="'+(reg?"on":"")+'" onclick="gateTab(\'reg\')">Регистрация</a><a class="'+(reg?"":"on")+'" onclick="gateTab(\'in\')">Авторизоваться</a></div><div style="display:grid;gap:12px">'+
   (reg?'<div><label>Ник</label><input id="pn" maxlength="24" placeholder="Твой гоночный ник"></div><div><label>Пароль</label><input id="pw" type="password" placeholder="Придумай пароль"></div>'+steamBoxHTML()+'<button class="btn" onclick="regPlayer()">Зарегистрироваться</button>'
   :'<div><label>Ник</label><input id="ln" maxlength="24" placeholder="Твой ник"></div><div><label>Пароль</label><input id="lp" type="password" placeholder="Пароль"></div><button class="btn" onclick="login()">Войти</button>')+'</div></div></div>';
   const pend=getPend();
@@ -447,7 +454,7 @@ function steamBoxHTML(){
   if(p){
     return '<div class="card" style="padding:12px"><div class="row">'+(p.avatar?'<img class="steamav" src="'+esc(p.avatar)+'" alt="">':"")+'<b>'+(p.nick?esc(p.nick):'<span class="mut">Загрузка профиля Steam…</span>')+'</b></div><div class="mut" style="margin-top:6px;word-break:break-all">'+esc(p.url)+'</div><div class="mut" style="margin-top:6px">Ник и аватар подставятся из Steam. Осталось придумать пароль и нажать «Зарегистрироваться».</div><div class="row" style="margin-top:8px"><button class="btn g s" onclick="clearPend()">Отменить Steam</button></div></div>';
   }
-  return '<div><label>Steam</label><button class="btn g" type="button" onclick="steamLogin()" style="width:100%">Войти через Steam ↗</button><div class="mut" style="margin-top:6px">Вас перекинет на страницу Steam — подтвердите вход, и ник с аватаркой подставятся автоматически. Steam нужен для достижений из игры.</div></div>';
+  return '<div><label>Steam — необязательно</label><button class="btn g" type="button" onclick="steamLogin()" style="width:100%">Войти через Steam ↗</button><div class="mut" style="margin-top:6px">Нужен только для достижений из игры. Привязать можно и позже — в профиле.</div></div><div><label>Или вставьте ссылку на профиль вручную</label><input id="ps" placeholder="https://steamcommunity.com/id/…"></div>';
 }
 function steamNorm(v){v=String(v||"").trim();const m=v.match(/steamcommunity\.com\/(id|profiles)\/([A-Za-z0-9_\-]+)/i);if(m)return"https://steamcommunity.com/"+m[1].toLowerCase()+"/"+m[2];if(/^7656119\d{10}$/.test(v))return"https://steamcommunity.com/profiles/"+v;return""}
 function findNick(n){const k=n.toLowerCase();return Object.entries(mem.players).find(([i,p])=>(p.nick||"").toLowerCase()===k)}
@@ -456,10 +463,10 @@ function adopt(){let out=null;try{out=localStorage.getItem("sg_out")}catch(e){}i
 async function regPlayer(){
   const n=$("#pn").value.trim(),pw=$("#pw").value;
   const pend=getPend();
-  const st=pend&&pend.url?pend.url:"";
+  const manual=$("#ps")?$("#ps").value:"";
+  const st=pend&&pend.url?pend.url:steamNorm(manual);
   if(n.length<2)return toast("Ник — минимум 2 символа");
   if(pw.length<4)return toast("Пароль — минимум 4 символа");
-  if(!st)return toast("Сначала подтвердите вход через Steam");
   if(findNick(n))return toast("Этот ник уже занят");
   if(Object.values(mem.players).some(p=>p.steam&&p.steam===st))return toast("Этот Steam уже привязан к аккаунту");
   const id="p"+Math.random().toString(36).slice(2,9)+Date.now().toString(36);
